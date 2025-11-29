@@ -1,7 +1,7 @@
 // main.cpp
 #include <iostream>
 #include <stdexcept>
-#include <SDL2/SDL.h>
+#include <SDL3/SDL.h>
 #include "engine/Core.h"
 
 int main() {

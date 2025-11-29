@@ -6,16 +6,16 @@
 #include "InputManager.h"
 
 class Core {
-private:
-    std::unique_ptr<Renderer> renderer;
-    std::unique_ptr<InputManager> inputManager;
-    bool running;
 
-public:
+    public:
     Core();
     ~Core();
 
     void run();
-};
 
+    private:
+    std::unique_ptr<Renderer> renderer;
+    std::unique_ptr<InputManager> inputManager;
+    bool running;
+};
 #endif
