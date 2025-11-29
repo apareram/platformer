@@ -4,7 +4,7 @@ Core::Core() {
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
         throw std::runtime_error("Error al inicializar SDL");
     }
-    renderer = new Renderer(800, 600, "Mi Motor de Juego");
+    renderer = new Renderer(800, 600, "Game");
     inputManager = new InputManager();
     running = true;
 }
@@ -20,7 +20,7 @@ void Core::run() {
         // Procesa entradas
         running = inputManager->processInput();
 
-        // Actualiza lógica del juego (aquí se añadirá más contenido)
+        // Actualiza lógica del juego (aquí se añadirá más contenido en futuros capí
         // ...
 
         // Renderiza escena
