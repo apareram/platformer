@@ -1,14 +1,15 @@
 #ifndef INPUTMANAGER_H
 #define INPUTMANAGER_H
 
-#include <SDL2/SDL.h>
+// SDL3 CHANGE: Update include
+#include <SDL3/SDL.h>
 
 class InputManager {
 public:
-    InputManager();                    // Constructor
-    ~InputManager();                   // Destructor
-    bool processInput();               // Procesa los eventos de entrada
-    bool isKeyPressed(SDL_Keycode key); // Verifica si una tecla específica está presionada
+    InputManager();
+    ~InputManager();
+    bool processInput();
+    bool isKeyPressed(SDL_Keycode key);
 };
 
 #endif

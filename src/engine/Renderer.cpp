@@ -1,43 +1,35 @@
 #include "Renderer.h"
-/*
-* Constructor de la clase Renderer
-* @param width Ancho de la ventana
-* @param height Alto de la ventana
-* @param title Título de la ventana
-*/
-Renderer::Renderer(int width, int height, const std::string& title) {
-    window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN);
-    if (!window) throw std::runtime_error("Error al crear la ventana");
+#include <iostream>
 
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) throw std::runtime_error("Error al crear el renderer");
+Renderer::Renderer(int width, int height, const std::string& title) {
+    // SDL3 CHANGE: No x, y arguments. No SDL_WINDOW_SHOWN flag needed.
+    window = SDL_CreateWindow(title.c_str(), width, height, 0);
+    if (!window) {
+        throw std::runtime_error(std::string("Error creating window: ") + SDL_GetError());
+    }
+
+    // SDL3 CHANGE: No index (-1) or flags. Second arg is the driver name (NULL for default).
+    renderer = SDL_CreateRenderer(window, NULL);
+    if (!renderer) {
+        throw std::runtime_error(std::string("Error creating renderer: ") + SDL_GetError());
+    }
 }
-/*
-* Destructor de la clase Renderer
-*/
+
 Renderer::~Renderer() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
 }
 
-/*
-* Método para limpiar la pantalla
-*/
 void Renderer::clear() {
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Negro
+    // SDL3 CHANGE: SetRenderDrawColor returns bool, but void is fine for basic usage
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); 
     SDL_RenderClear(renderer);
 }
 
-/*
-*
-*/
 void Renderer::present() {
     SDL_RenderPresent(renderer);
 }
 
-/*
-* 
-*/
 SDL_Renderer* Renderer::getRenderer() {
     return renderer;
 }
