@@ -6,7 +6,7 @@
 
 int main() {
     // se inicia SDL con una condición para evitar errores
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS)) {
         std::cerr << "SDL init error: " << SDL_GetError() << "\n";
         return -1;
     }
