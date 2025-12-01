@@ -9,16 +9,18 @@
                 "-std=c++17",
                 "-g",
                 
-                // 1. INCLUIR (Dónde están los .h)
+                //Dónde buscar .h
                 "-I/opt/homebrew/include",
+                "-I${workspaceFolder}/src",
 
-                // Esto compila Core.cpp, InputManager.cpp, Renderer.cpp, etc.
+                // Qué compilar
                 "${workspaceFolder}/src/engine/*.cpp",
+                "${workspaceFolder}/src/main.cpp", 
 
                 "-o",
                 "${workspaceFolder}/game_executable",
 
-                // 3. LINKEAR (Dónde está la librería compilada)
+                // 3. LIBRERÍAS
                 "-L/opt/homebrew/lib",
                 "-lSDL3",
                 "-rpath",
