@@ -1,15 +1,17 @@
 #include "Core.h"
 #include <stdexcept>
 
-Core::Core() : running(true){
+// constructor
+Core::Core() : running(true){ // funcion core pertenece a la calse core y running empieza true
     renderer = std::make_unique<Renderer>(800, 600, "Game");
     inputManager = std::make_unique<InputManager>();
-    running = true;
 }
 
+// destructor
 Core::~Core() {
 }
 
+// game loop (60 veces por segundo)
 void Core::run() {
     while (running) {
         running = inputManager->processInput();

@@ -5,13 +5,14 @@
 #include "Renderer.h"
 #include "InputManager.h"
 
+// se define la clase core
 class Core {
 
     public:
     Core();
-    ~Core();
+    ~Core(); //destrucor (limpiador)
 
-    void run();
+    void run(); //bucle del juego
 
     private:
     std::unique_ptr<Renderer> renderer;

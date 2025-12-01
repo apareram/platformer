@@ -5,11 +5,13 @@
 #include "engine/Core.h"
 
 int main() {
+    // se inicia SDL con una condición para evitar errores
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) < 0) {
         std::cerr << "SDL init error: " << SDL_GetError() << "\n";
         return -1;
     }
 
+    // se crea una instacioa de la clase core
     try {
         Core core;
         core.run();
@@ -17,6 +19,7 @@ int main() {
         std::cerr << "Exception: " << e.what() << "\n";
     }
 
+    // se cierra SDL siguiendo buenas practicas
     SDL_Quit();
     return 0;
 }
