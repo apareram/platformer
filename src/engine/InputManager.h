@@ -1,7 +1,5 @@
-#ifndef INPUTMANAGER_H
+#ifndef INPUTMANAGER_H //evitan que el compilador copie y pegue este archivo dos veces por error
 #define INPUTMANAGER_H
-
-// SDL3 CHANGE: Update include
 #include <SDL3/SDL.h>
 
 class InputManager {
