@@ -11,6 +11,7 @@ public:
 
     void clear();
     void present();
+    void drawRect(float x, float y, float w, float h); // funcion para dibujar un rectangulo de prueba
     SDL_Renderer* getRenderer(); // Return raw SDL pointer
 
 private:

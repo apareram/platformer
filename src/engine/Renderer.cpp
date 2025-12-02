@@ -33,3 +33,16 @@ void Renderer::present() {
 SDL_Renderer* Renderer::getRenderer() {
     return renderer;
 }
+
+// función para "dibujar" un rectángulo
+void Renderer::drawRect(float x, float y, float w, float h) {
+    // crea un rectángulo flotante (SDL3 usa FRect)
+    SDL_FRect rect = { x, y, w, h };
+    // se elige el color (R,G,B,Alpha), rojo en este caso
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    // se rellena 
+    SDL_RenderFillRect(renderer, &rect);
+    // se vuelve a poner el color el color negro
+    // para que el fondo de la siguiente vuelta no sea rojo.
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+}
