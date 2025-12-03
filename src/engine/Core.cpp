@@ -23,8 +23,8 @@ Core::Core() : running(true){ // funcion core pertenece a la clase core y runnin
     // cargar plataformas
     bigPlatform = renderer->loadTexture("assets/plataformaGrande.png");
     smallPlatform = renderer->loadTexture("assets/platafomaPequena.png");
-    Platform p1 = {65, 65, 250, 120};   // La grande
-    Platform p2 = {400, 300, 100, 100}; // La pequeña
+    Platform p1 = {55, 85, 250, 100};   // La grande
+    Platform p2 = {400, 330, 100, 80}; // La pequeña
     platforms.push_back(p1);
     platforms.push_back(p2);
 
@@ -137,7 +137,6 @@ void Core::run() {
                 frameTimer = 0;
                 
                 // loop
-                // OJO: Para el doble salto quizás no quieras loop, pero por ahora dejémoslo así
                 if (currentFrame >= currentAnim->size()) {
                     currentFrame = 0;
                 }
@@ -147,35 +146,30 @@ void Core::run() {
         }
 
         renderer->clear(); // limpiamos
+
         // dibujamos el fondo (siempre antes que el jugados)
         if (backgroundTexture) {
             renderer->drawTexture(backgroundTexture, 0, 0, 800, 600, false);
         }
-        // dibujamos plataformas
-        renderer->drawTexture(bigPlatform, 65, 65, 250, 120, false);
-        renderer->drawTexture(smallPlatform, 400, 300, 100, 100, false);
 
-        // Obtenemos la textura actual
-        SDL_Texture* textureToDraw = (*currentAnim)[currentFrame];
+        // dibujamos plataformas
+        renderer->drawTexture(bigPlatform, platforms[0].x, platforms[0].y - 20, platforms[0].w, 120, false);
+        renderer->drawTexture(smallPlatform, platforms[1].x, platforms[1].y - 20, platforms[1].w, 100, false);
         
+        // jugador
+        SDL_Texture* textureToDraw = (*currentAnim)[currentFrame]; //obtenemos textura actual
         float drawWidth = 100.0f;
         float drawHeight = 100.0f;
-        // Offset X: Centramos la imagen sobre el cuerpo físico
-        float drawX = player.x - (drawWidth - player.width) / 2;
-        // Offset Y: Alineamos la base de la imagen con los pies del cuerpo físico
-        // (Restamos la diferencia de altura para que la imagen suba un poco)
-        float drawY = player.y - (drawHeight - player.height);
-
-        // Dibujamos el sprite en lugar del rectángulo
+        float drawX = player.x - (drawWidth - player.width) / 2; // centramos la imagen sobre el cuerpo físico
+        float drawY = player.y - (drawHeight - player.height); // lineamos la base de la imagen con los pies del cuerpo físico
         renderer->drawTexture(textureToDraw, drawX, drawY, drawWidth, drawHeight, facingLeft);
 
         // --- MODO DEBUG: DIBUJAR LAS CAJAS INVISIBLES ---
-        // 1. Dibujar hitbox del jugador (VERDE)
+        // jugador
         SDL_SetRenderDrawColor(renderer->getRenderer(), 0, 255, 0, 255); // Verde
         SDL_FRect playerRect = {player.x, player.y, player.width, player.height};
         SDL_RenderRect(renderer->getRenderer(), &playerRect); // Dibuja solo el borde
-
-        // 2. Dibujar hitboxes de las plataformas (ROJO)
+        // plataformas
         SDL_SetRenderDrawColor(renderer->getRenderer(), 255, 0, 0, 255); // Rojo
         for(const auto& p : platforms) {
             SDL_FRect platformRect = {p.x, p.y, p.w, p.h};
