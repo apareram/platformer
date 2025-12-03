@@ -32,6 +32,11 @@ class Core {
     //fondo
     SDL_Texture* backgroundTexture;
 
+    // platafomas
+    std::vector<Platform> platforms; // Lista de datos físicos
+    SDL_Texture* bigPlatform;
+    SDL_Texture* smallPlatform;
+
     // Variables de control
     std::vector<SDL_Texture*>* currentAnim; // Puntero a la animación actual
     float frameTimer;       // Contador de tiempo para cambiar imagen

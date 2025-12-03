@@ -20,6 +20,14 @@ Core::Core() : running(true){ // funcion core pertenece a la calse core y runnin
     // cargar el fondo
     backgroundTexture = renderer->loadTexture("assets/fondo.png");
 
+    // cargar plataformas
+    bigPlatform = renderer->loadTexture("assets/plataformaGrande.png");
+    smallPlatform = renderer->loadTexture("assets/platafomaPequena.png");
+    Platform p1 = {65, 65, 250, 120};   // La grande
+    Platform p2 = {400, 300, 100, 100}; // La pequeña
+    platforms.push_back(p1);
+    platforms.push_back(p2);
+
     // CARGAR SPRITES
     idleAnim.push_back(renderer->loadTexture("assets/monoIdle.png"));
 
@@ -86,7 +94,7 @@ void Core::run() {
 
         //actualizamos la fisica
         // gravedad + colisión suelo
-        physics->update(player, dt);
+        physics->update(player, dt, platforms);
 
         // animación
         // determinamos dirección
@@ -143,10 +151,15 @@ void Core::run() {
         if (backgroundTexture) {
             renderer->drawTexture(backgroundTexture, 0, 0, 800, 600, false);
         }
+        // dibujamos plataformas
+        renderer->drawTexture(bigPlatform, 55, 55, 250, 120, false);
+        renderer->drawTexture(smallPlatform, 400, 300, 100, 100, false);
+
         // Obtenemos la textura actual
         SDL_Texture* textureToDraw = (*currentAnim)[currentFrame];
         // Dibujamos el sprite en lugar del rectángulo
         renderer->drawTexture(textureToDraw, player.x, player.y, player.width, player.height, facingLeft);
+
         renderer->present(); // presentamos lo nuevo
     }
 }
