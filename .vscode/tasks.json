@@ -23,6 +23,7 @@
                 // 3. LIBRERÍAS
                 "-L/opt/homebrew/lib",
                 "-lSDL3",
+                "-lSDL3_image",
                 "-rpath",
                 "/opt/homebrew/lib"
             ],
