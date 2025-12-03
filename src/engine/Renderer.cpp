@@ -34,15 +34,24 @@ SDL_Renderer* Renderer::getRenderer() {
     return renderer;
 }
 
-// función para "dibujar" un rectángulo
-void Renderer::drawRect(float x, float y, float w, float h) {
-    // crea un rectángulo flotante (SDL3 usa FRect)
-    SDL_FRect rect = { x, y, w, h };
-    // se elige el color (R,G,B,Alpha), rojo en este caso
-    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-    // se rellena 
-    SDL_RenderFillRect(renderer, &rect);
-    // se vuelve a poner el color el color negro
-    // para que el fondo de la siguiente vuelta no sea rojo.
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+// función para cargar las texturas
+SDL_Texture* Renderer::loadTexture(const std::string& path) {
+    SDL_Texture* tex = IMG_LoadTexture(renderer, path.c_str());
+    if (!tex) {
+        SDL_Log("No se pudo cargar la imagen %s: %s", path.c_str(), SDL_GetError());
+    }
+    return tex;
+}
+
+// funcion para imprimir las texturas
+void Renderer::drawTexture(SDL_Texture* texture, float x, float y, float w, float h, bool flipX) {
+    if (!texture) return; // Si no hay imagen, no hagas nada
+
+    SDL_FRect dstRect = { x, y, w, h };
+    
+    // SDL_FLIP_HORIZONTAL es para mirar a la izquierda
+    // SDL_FLIP_NONE es normal
+    SDL_FlipMode flip = flipX ? SDL_FLIP_HORIZONTAL : SDL_FLIP_NONE;
+
+    SDL_RenderTextureRotated(renderer, texture, NULL, &dstRect, 0.0, NULL, flip);
 }
