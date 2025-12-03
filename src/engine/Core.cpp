@@ -6,15 +6,15 @@
 Core::Core() : running(true){ // funcion core pertenece a la calse core y running empieza true
     renderer = std::make_unique<Renderer>(800, 600, "Platformer");
     inputManager = std::make_unique<InputManager>();
-    physics = std::make_unique<Physics>(1200.0f); //gravedad
+    physics = std::make_unique<Physics>(1200.0f, 520.0f); //gravedad
 
     // Inicializamos al jugador
     player.x = 100;
     player.y = 100;
     player.vx = 0;
     player.vy = 0;
-    player.width = 50;
-    player.height = 50;
+    player.width = 100;
+    player.height = 100;
     player.grounded = false;
 
     // cargar el fondo
