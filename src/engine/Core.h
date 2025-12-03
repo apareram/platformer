@@ -22,6 +22,19 @@ class Core {
     std::unique_ptr<Physics> physics;
 
     Body player; // el objeto del jugador
+
+    // --- ANIMACIONES ---
+    std::vector<SDL_Texture*> idleAnim;
+    std::vector<SDL_Texture*> runAnim;
+    std::vector<SDL_Texture*> jumpAnim;
+    std::vector<SDL_Texture*> doubleJumpAnim;
+
+    // Variables de control
+    std::vector<SDL_Texture*>* currentAnim; // Puntero a la animación actual
+    float frameTimer;       // Contador de tiempo para cambiar imagen
+    int currentFrame;       // Índice de la imagen actual (0, 1, 2...)
+    bool facingLeft;        // ¿Mira a la izquierda?
+
     bool running;
 };
 #endif

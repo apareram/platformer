@@ -1,6 +1,6 @@
 #include "Physics.h"
 
-Physics::Physics(float gravity) : gravity(gravity) {}
+Physics::Physics(float gravity, float groundLevel) : gravity(gravity), groundLevel(groundLevel){}
 
 void Physics::update(Body& body, float dt) {
     // se aplica gravedad
@@ -10,11 +10,17 @@ void Physics::update(Body& body, float dt) {
     body.x += body.vx * dt;
     body.y += body.vy * dt;
 
-    // sencilla colicion con el piso a y = 400
-    if (body.y + body.height >= 400) {
-        body.y = 400 - body.height;
+    // rotación
+    body.angle += body.angularVel * dt;
+
+    // sencilla colicion con el piso
+    if (body.y + body.height >= groundLevel) {
+        body.y = groundLevel - body.height;
         body.vy = 0;
         body.grounded = true;
+        // REINICIAMOS SALTOS Y ROTACIÓN AL TOCAR EL SUELO
+        body.jumpCount = 0;
+        body.angularVel = 0;
     } else {
         body.grounded = false;
     }

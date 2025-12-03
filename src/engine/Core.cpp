@@ -16,6 +16,24 @@ Core::Core() : running(true){ // funcion core pertenece a la calse core y runnin
     player.width = 50;
     player.height = 50;
     player.grounded = false;
+
+    // CARGAR SPRITES
+    idleAnim.push_back(renderer->loadTexture("assets/monoIdle.png"));
+
+    runAnim.push_back(renderer->loadTexture("assets/monoCorriendo1.png"));
+    runAnim.push_back(renderer->loadTexture("assets/monoCorriendo2.png"));
+    runAnim.push_back(renderer->loadTexture("assets/monoCorriendo3.png"));
+
+    jumpAnim.push_back(renderer->loadTexture("assets/monoSaltando.png"));
+
+    //doble salto
+    doubleJumpAnim.push_back(renderer->loadTexture("assets/monoRotando1.png"));
+    doubleJumpAnim.push_back(renderer->loadTexture("assets/monoRotando2.png"));
+    doubleJumpAnim.push_back(renderer->loadTexture("assets/monoRotando3.png"));
+    doubleJumpAnim.push_back(renderer->loadTexture("assets/monoRotando4.png"));
+
+    // Empezamos parados
+    currentAnim = &idleAnim;
 }
 
 // destructor
@@ -27,19 +45,20 @@ void Core::run() {
     Uint64 lastTime = SDL_GetTicks();
     Uint64 currentTime;
 
+    // Variable estática para detectar "pulsación única" de tecla
+    static bool jumpKeyPressed = false;
+
     while (running) {
         // calcular dt
         currentTime = SDL_GetTicks();
         // Convertimos milisegundos a segundos
         float dt = (currentTime - lastTime) / 1000.0f;
         lastTime = currentTime;
-
         // inputs
         running = inputManager->processInput();
-
+        
         // Controlamos la velocidad (vx)
         player.vx = 0; // Frenamos si no hay teclas
-
         if (inputManager->isKeyPressed(SDLK_D)) {
             player.vx = 300.0f; // Mover derecha
         }
@@ -48,17 +67,79 @@ void Core::run() {
         }
         // Salto, solo si estamos en el suelo (grounded)
         // saltar es restar "Y" SDL
-        if (inputManager->isKeyPressed(SDLK_W) && player.grounded) {
-            player.vy = -600.0f; // Impulso hacia arriba
-            player.grounded = false; 
+        // salto y doble salto 
+        bool currentJumpKey = inputManager->isKeyPressed(SDLK_W);
+        // Solo entramos si acabamos de pulsar la tecla (no si la mantenemos)
+        if (currentJumpKey && !jumpKeyPressed) {
+            // Permitimos saltar si estamos en el suelo O llevamos menos de 2 saltos
+            if (player.grounded || player.jumpCount < 2) {
+                player.vy = -600.0f; // Impulso
+                player.grounded = false;
+                player.jumpCount++;  // Sumamos salto (1 o 2)
+                std::cout << "Salto numero: " << player.jumpCount << std::endl;
+            }
         }
+        jumpKeyPressed = currentJumpKey; // Actualizamos estado de tecla
 
         //actualizamos la fisica
         // gravedad + colisión suelo
         physics->update(player, dt);
 
+        // animación
+        // determinamos dirección
+        if (player.vx > 0) facingLeft = false;
+        if (player.vx < 0) facingLeft = true;
+
+        // estados de animación
+        std::vector<SDL_Texture*>* nextAnim = &idleAnim; // Por defecto Idle
+        float animSpeed = 0.1f; // Velocidad normal (100ms por frame)
+
+        if (player.grounded) {
+            if (player.vx != 0) {
+                nextAnim = &runAnim;
+                animSpeed = 0.1f; // Correr
+            } else {
+                nextAnim = &idleAnim;
+            }
+        } else {
+            // doble salto
+            if (player.jumpCount >= 2) {
+                nextAnim = &doubleJumpAnim;
+                animSpeed = 0.05f; // El giro debe ser rápido (50ms)
+            } else {
+                nextAnim = &jumpAnim;
+            }
+        }
+
+        // cambio de animacion
+        if (currentAnim != nextAnim) {
+            currentAnim = nextAnim;
+            currentFrame = 0; // Reiniciar animación desde el principio
+            frameTimer = 0;
+        }
+
+        // avance de frames
+        if (currentAnim->size() > 1) {
+            frameTimer += dt;
+            if (frameTimer >= animSpeed) {
+                currentFrame++;
+                frameTimer = 0;
+                
+                // loop
+                // OJO: Para el doble salto quizás no quieras loop, pero por ahora dejémoslo así
+                if (currentFrame >= currentAnim->size()) {
+                    currentFrame = 0;
+                }
+            }
+        } else {
+            currentFrame = 0; // Si es imagen única
+        }
+
         renderer->clear(); // limpiamos
-        renderer->drawRect(player.x, player.y, player.width, player.height); // dibujames en base a las coordenadas de physics
+        // Obtenemos la textura actual
+        SDL_Texture* textureToDraw = (*currentAnim)[currentFrame];
+        // Dibujamos el sprite en lugar del rectángulo
+        renderer->drawTexture(textureToDraw, player.x, player.y, player.width, player.height, facingLeft);
         renderer->present(); // presentamos lo nuevo
     }
 }
