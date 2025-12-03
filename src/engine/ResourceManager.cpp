@@ -18,3 +18,10 @@ SDL_Texture* ResourceManager::loadTexture(const std::string& path, SDL_Renderer*
     textures[path] = newTex;
     return newTex;
 }
+
+void ResourceManager::clear() {
+    for (auto& pair : textures) {
+        SDL_DestroyTexture(pair.second);
+    }
+    textures.clear();
+}
