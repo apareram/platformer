@@ -17,6 +17,9 @@ Core::Core() : running(true){ // funcion core pertenece a la calse core y runnin
     player.height = 50;
     player.grounded = false;
 
+    // cargar el fondo
+    backgroundTexture = renderer->loadTexture("assets/fondo.png");
+
     // CARGAR SPRITES
     idleAnim.push_back(renderer->loadTexture("assets/monoIdle.png"));
 
@@ -136,6 +139,10 @@ void Core::run() {
         }
 
         renderer->clear(); // limpiamos
+        // dibujamos el fondo (siempre antes que el jugados)
+        if (backgroundTexture) {
+            renderer->drawTexture(backgroundTexture, 0, 0, 800, 600, false);
+        }
         // Obtenemos la textura actual
         SDL_Texture* textureToDraw = (*currentAnim)[currentFrame];
         // Dibujamos el sprite en lugar del rectángulo

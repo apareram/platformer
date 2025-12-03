@@ -29,6 +29,9 @@ class Core {
     std::vector<SDL_Texture*> jumpAnim;
     std::vector<SDL_Texture*> doubleJumpAnim;
 
+    //fondo
+    SDL_Texture* backgroundTexture;
+
     // Variables de control
     std::vector<SDL_Texture*>* currentAnim; // Puntero a la animación actual
     float frameTimer;       // Contador de tiempo para cambiar imagen
