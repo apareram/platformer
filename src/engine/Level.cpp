@@ -35,13 +35,13 @@ void Level::render(Renderer* renderer) {
     if (platforms.size() > 0 && platBigTex) {
         // La física dice Y=65, dibujamos en Y=55 (65 - 10)
         // La altura visual es 120 (más alta que la física para las raíces colgando)
-        renderer->drawTexture(platBigTex, platforms[0].x, platforms[0].y - 10, platforms[0].w, 120, false);
+        renderer->drawTexture(platBigTex, platforms[0].x, platforms[0].y - 20, platforms[0].w, 120, false);
     }
 
     // se dibuja la segunda plataforma (Pequeña)
     if (platforms.size() > 1 && platSmallTex) {
         // La física dice Y=310, dibujamos en Y=300 (310 - 10)
-        renderer->drawTexture(platSmallTex, platforms[1].x, platforms[1].y - 10, platforms[1].w, 100, false);
+        renderer->drawTexture(platSmallTex, platforms[1].x, platforms[1].y - 20, platforms[1].w, 100, false);
     }
 
     // NOTA PARA EL FUTURO:
