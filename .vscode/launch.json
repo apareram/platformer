@@ -1,7 +1,18 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
-    "configurations": []
+    "configurations": [
+        {
+            "name": "Jugar / Debuggear (LLDB)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/bin/game_executable",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",  // <--- ESTA ES LA CLAVE MÁGICA
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "lldb",
+            "preLaunchTask": "Compilar Juego (SDL3)" // Asegúrate de que este nombre coincida con el "label" de tu tasks.json
+        }
+    ]
 }
