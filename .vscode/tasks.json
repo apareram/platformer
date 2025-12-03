@@ -18,7 +18,7 @@
                 "${workspaceFolder}/src/main.cpp", 
 
                 "-o",
-                "${workspaceFolder}/game_executable",
+                "${workspaceFolder}/bin/game_executable",
 
                 // 3. LIBRERÍAS
                 "-L/opt/homebrew/lib",
