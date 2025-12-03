@@ -3,18 +3,18 @@
 #include <iostream>
 
 // constructor
-Core::Core() : running(true){ // funcion core pertenece a la calse core y running empieza true
+Core::Core() : running(true){ // funcion core pertenece a la clase core y running empieza true
     renderer = std::make_unique<Renderer>(800, 600, "Platformer");
     inputManager = std::make_unique<InputManager>();
     physics = std::make_unique<Physics>(1200.0f, 520.0f); //gravedad
 
-    // Inicializamos al jugador
+    // inicializamos al jugador
     player.x = 100;
     player.y = 100;
     player.vx = 0;
     player.vy = 0;
-    player.width = 100;
-    player.height = 100;
+    player.width = 40;
+    player.height = 80;
     player.grounded = false;
 
     // cargar el fondo
@@ -28,7 +28,7 @@ Core::Core() : running(true){ // funcion core pertenece a la calse core y runnin
     platforms.push_back(p1);
     platforms.push_back(p2);
 
-    // CARGAR SPRITES
+    // cargamks sprites
     idleAnim.push_back(renderer->loadTexture("assets/monoIdle.png"));
 
     runAnim.push_back(renderer->loadTexture("assets/monoCorriendo1.png"));
@@ -152,13 +152,38 @@ void Core::run() {
             renderer->drawTexture(backgroundTexture, 0, 0, 800, 600, false);
         }
         // dibujamos plataformas
-        renderer->drawTexture(bigPlatform, 55, 55, 250, 120, false);
+        renderer->drawTexture(bigPlatform, 65, 65, 250, 120, false);
         renderer->drawTexture(smallPlatform, 400, 300, 100, 100, false);
 
         // Obtenemos la textura actual
         SDL_Texture* textureToDraw = (*currentAnim)[currentFrame];
+        
+        float drawWidth = 100.0f;
+        float drawHeight = 100.0f;
+        // Offset X: Centramos la imagen sobre el cuerpo físico
+        float drawX = player.x - (drawWidth - player.width) / 2;
+        // Offset Y: Alineamos la base de la imagen con los pies del cuerpo físico
+        // (Restamos la diferencia de altura para que la imagen suba un poco)
+        float drawY = player.y - (drawHeight - player.height);
+
         // Dibujamos el sprite en lugar del rectángulo
-        renderer->drawTexture(textureToDraw, player.x, player.y, player.width, player.height, facingLeft);
+        renderer->drawTexture(textureToDraw, drawX, drawY, drawWidth, drawHeight, facingLeft);
+
+        // --- MODO DEBUG: DIBUJAR LAS CAJAS INVISIBLES ---
+        // 1. Dibujar hitbox del jugador (VERDE)
+        SDL_SetRenderDrawColor(renderer->getRenderer(), 0, 255, 0, 255); // Verde
+        SDL_FRect playerRect = {player.x, player.y, player.width, player.height};
+        SDL_RenderRect(renderer->getRenderer(), &playerRect); // Dibuja solo el borde
+
+        // 2. Dibujar hitboxes de las plataformas (ROJO)
+        SDL_SetRenderDrawColor(renderer->getRenderer(), 255, 0, 0, 255); // Rojo
+        for(const auto& p : platforms) {
+            SDL_FRect platformRect = {p.x, p.y, p.w, p.h};
+            SDL_RenderRect(renderer->getRenderer(), &platformRect);
+        }
+        // Restaurar color negro por seguridad
+        SDL_SetRenderDrawColor(renderer->getRenderer(), 0, 0, 0, 255);
+        // --------------------------------------------------------------
 
         renderer->present(); // presentamos lo nuevo
     }

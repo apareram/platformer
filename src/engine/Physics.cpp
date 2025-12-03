@@ -16,34 +16,31 @@ void Physics::update(Body& body, float dt, const std::vector<Platform>& platform
     // cuerpo cae hasta que se demuetre lo contrario
     body.grounded = false;
 
-    // sencilla colicion con el piso
+    // --- colision con el piso ---
     if (body.y + body.height >= groundLevel) {
         body.y = groundLevel - body.height;
         body.vy = 0;
         body.grounded = true;
-        // REINICIAMOS SALTOS Y ROTACIÓN AL TOCAR EL SUELO
+        // see reinician valores al tocar suelo
         body.jumpCount = 0;
         body.angularVel = 0;
     }
 
-    // --- COLISIÓN CON PLATAFORMAS ---
-    // Solo checamos colisión si estamos cayendo (vy > 0)
-    // Esto permite saltar "a través" de ellas desde abajo (tipo Mario Bros)
-    if (body.vy >= 0) {
+    // --- colision con plataformas ---
+    if (body.vy >= 0) { // solo si cae, permite saltar "a través"
         for (const auto& plat : platforms) {
-            if (checkCollision(body, plat)) {
+            // si estamos en x
+            if (body.x + body.width > plat.x + 5 && body.x < plat.x + plat.w - 5) {//con margen de 5px para que no caiga si está justo en el borde
                 
-                // Verificamos si los pies estaban "arriba" de la plataforma antes de chocar
-                // (Para evitar que te teletransportes al techo si saltas de lado)
-                float previousFootY = body.y + body.height - (body.vy * dt);
-                
-                if (previousFootY <= plat.y + 10.0f) { // +10 es un margen de error
-                    body.y = plat.y - body.height; // Te subo a la plataforma
+                // si los pies están por debajo del techo y
+                // si los pies cruzaron el borde de la plataforma, pero no han bajado más de 25 píxeles
+                if (body.y + body.height >= plat.y && body.y + body.height <= plat.y + 25.0f) {// si estamos en y
+
+                    body.y = plat.y - body.height; 
                     body.vy = 0;
                     body.grounded = true;
-                    body.jumpCount = 0;
+                    body.jumpCount = 0; // Reset saltos
                     body.angularVel = 0;
-                    // body.angle = 0; // Enderezar
                 }
             }
         }
