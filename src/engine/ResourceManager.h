@@ -6,7 +6,7 @@
 
 class ResourceManager {
 public:
-    static ResourceManager& getInstance() { // singleton
+    static ResourceManager& getInstance() { // singleton para llamarlo desde donde sea
         static ResourceManager instance;
         return instance;
     }
