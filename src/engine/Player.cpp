@@ -106,11 +106,12 @@ void Player::update(float dt) {
         if (isCrouching) {
             // agacharse es la prioridad 2
             nextAnim = &crouchAnim;
-            animSpeed = 0.15f; 
+            animSpeed = 0.10f; 
             loopAnim = false; // se queda en el último frame (agachado total)
         }
         else if (body.vx != 0) {
             nextAnim = &runAnim;
+            animSpeed = 0.4f;
         } else {
             nextAnim = &idleAnim;
             animSpeed = 0.4f;
