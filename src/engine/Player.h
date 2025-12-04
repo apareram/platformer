@@ -23,12 +23,16 @@ private:
     std::vector<SDL_Texture*> runAnim;
     std::vector<SDL_Texture*> jumpAnim;
     std::vector<SDL_Texture*> doubleJumpAnim;
-    
+    std::vector<SDL_Texture*> crouchAnim; 
+    std::vector<SDL_Texture*> attackAnim; 
+
     // estado de animación
     std::vector<SDL_Texture*>* currentAnim;
     int currentFrame;
     float frameTimer;
     bool facingLeft;
+    bool isAttacking;
+    bool isCrouching;
     
     // constantes propias del jugador
     const float SPEED = 350.0f;
