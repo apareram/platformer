@@ -16,19 +16,27 @@ Player::Player(Renderer* renderer) : currentFrame(0), frameTimer(0), facingLeft(
     // cargamos animaciones
     idleAnim.push_back(res.loadTexture("assets/monoIdle1.png", rawRen));
     idleAnim.push_back(res.loadTexture("assets/monoIdle2.png", rawRen));
-    idleAnim.push_back(res.loadTexture("assets/monoIdle3.png", rawRen));
-    idleAnim.push_back(res.loadTexture("assets/monoIdle4.png", rawRen));
 
     runAnim.push_back(res.loadTexture("assets/monoCorriendo1.png", rawRen));
     runAnim.push_back(res.loadTexture("assets/monoCorriendo2.png", rawRen));
     runAnim.push_back(res.loadTexture("assets/monoCorriendo3.png", rawRen));
 
-    jumpAnim.push_back(res.loadTexture("assets/monoSaltando.png", rawRen));
+    jumpAnim.push_back(res.loadTexture("assets/monoSaltando1.png", rawRen));
+    jumpAnim.push_back(res.loadTexture("assets/monoSaltando2.png", rawRen));
+    jumpAnim.push_back(res.loadTexture("assets/monoSaltando3.png", rawRen));
 
     doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando1.png", rawRen));
     doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando2.png", rawRen));
     doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando3.png", rawRen));
     doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando4.png", rawRen));
+    doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando5.png", rawRen));
+    doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando6.png", rawRen));
+    doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando7.png", rawRen));
+    doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando8.png", rawRen));
+    doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando9.png", rawRen));
+    doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando10.png", rawRen));
+    doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando11.png", rawRen));
+    doubleJumpAnim.push_back(res.loadTexture("assets/monoRotando12.png", rawRen));
 
     crouchAnim.push_back(res.loadTexture("assets/monoAgachado1.png", rawRen));
     crouchAnim.push_back(res.loadTexture("assets/monoAgachado2.png", rawRen));
@@ -120,9 +128,18 @@ void Player::update(float dt) {
         // doble salto
         if (body.jumpCount >= 2) {
             nextAnim = &doubleJumpAnim;
-            animSpeed = 0.05f; // el giro debe ser rápido (50ms)
+            animSpeed = 0.09f; // el giro debe ser rápido (50ms)
         } else {
+            // salto normal
             nextAnim = &jumpAnim;
+            
+            if (body.vy < 0) {// se verifica la velocidad vertical (
+                animSpeed = 0.1f; 
+                loopAnim = false; 
+            } 
+            else { // esta cayendo (vy > 0)
+                animSpeed = 0.0f; // truco: velocidad 0 para que no cambie de frame automáticamente
+            }
         }
     }
 
@@ -135,24 +152,29 @@ void Player::update(float dt) {
 
     // avance de frames
     if (currentAnim->size() > 1) {
-        frameTimer += dt;
-        if (frameTimer >= animSpeed) {
-            currentFrame++;
-            frameTimer = 0;
-            // finaliza animación
-            if (currentFrame >= currentAnim->size()) {
-                if (isAttacking) {
-                    // si se terminó el ataque, dejamos de atacar y volvemos a Idle
-                    isAttacking = false;
-                    currentFrame = 0; 
-                } 
-                else if (isCrouching) {
-                    // si se terminó de agacharse, nos quedamos en el último frame (el 2)
-                    currentFrame = currentAnim->size() - 1;
-                }
-                else {
-                    // Loop normal (correr, idle, etc)
-                    currentFrame = 0;
+        // animacion de caida
+        if (currentAnim == &jumpAnim && body.vy > 0) {
+            currentFrame = jumpAnim.size() - 1; // El último frame
+        } else {
+            frameTimer += dt;
+            if (frameTimer >= animSpeed) {
+                currentFrame++;
+                frameTimer = 0;
+                // finaliza animación
+                if (currentFrame >= currentAnim->size()) {
+                    if (isAttacking) {
+                        // si se terminó el ataque, dejamos de atacar y volvemos a Idle
+                        isAttacking = false;
+                        currentFrame = 0; 
+                    } 
+                    else if (isCrouching) {
+                        // si se terminó de agacharse, nos quedamos en el último frame (el 2)
+                        currentFrame = currentAnim->size() - 1;
+                    }
+                    else {
+                        // Loop normal (correr, idle, etc)
+                        currentFrame = 0;
+                    }
                 }
             }
         }
