@@ -16,10 +16,32 @@ Player::Player(Renderer* renderer) : currentFrame(0), frameTimer(0), facingLeft(
     // cargamos animaciones
     idleAnim.push_back(res.loadTexture("assets/monoIdle1.png", rawRen));
     idleAnim.push_back(res.loadTexture("assets/monoIdle2.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle3.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle4.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle5.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle6.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle7.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle8.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle9.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle10.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle11.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle12.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle13.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle14.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle15.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle16.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle17.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle18.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle19.png", rawRen));
+    idleAnim.push_back(res.loadTexture("assets/monoIdle20.png", rawRen));
 
     runAnim.push_back(res.loadTexture("assets/monoCorriendo1.png", rawRen));
     runAnim.push_back(res.loadTexture("assets/monoCorriendo2.png", rawRen));
     runAnim.push_back(res.loadTexture("assets/monoCorriendo3.png", rawRen));
+    runAnim.push_back(res.loadTexture("assets/monoCorriendo4.png", rawRen));
+    runAnim.push_back(res.loadTexture("assets/monoCorriendo5.png", rawRen));
+    runAnim.push_back(res.loadTexture("assets/monoCorriendo6.png", rawRen));
+    runAnim.push_back(res.loadTexture("assets/monoCorriendo7.png", rawRen));
 
     jumpAnim.push_back(res.loadTexture("assets/monoSaltando1.png", rawRen));
     jumpAnim.push_back(res.loadTexture("assets/monoSaltando2.png", rawRen));
@@ -45,6 +67,7 @@ Player::Player(Renderer* renderer) : currentFrame(0), frameTimer(0), facingLeft(
     attackAnim.push_back(res.loadTexture("assets/monoAtacando1.png", rawRen));
     attackAnim.push_back(res.loadTexture("assets/monoAtacando2.png", rawRen));
     attackAnim.push_back(res.loadTexture("assets/monoAtacando3.png", rawRen));
+    attackAnim.push_back(res.loadTexture("assets/monoAtacando4.png", rawRen));
 
     // Empezamos parados
     currentAnim = &idleAnim;
@@ -119,7 +142,7 @@ void Player::update(float dt) {
         }
         else if (body.vx != 0) {
             nextAnim = &runAnim;
-            animSpeed = 0.4f;
+            animSpeed = 0.2f;
         } else {
             nextAnim = &idleAnim;
             animSpeed = 0.4f;
