@@ -5,6 +5,13 @@
 #include "Physics.h"
 #include "Player.h" 
 #include "Level.h"  
+#include "Menu.h"
+
+// estados de juego
+enum GameState {
+    MENU,
+    PLAYING
+};
 
 class Core {
 public:
@@ -23,6 +30,9 @@ private:
     // objetos propios
     std::unique_ptr<Player> player; 
     std::unique_ptr<Level> level;
+
+    std::unique_ptr<Menu> menu; 
+    GameState currentState;
 
     bool running;
 };

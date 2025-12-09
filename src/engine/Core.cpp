@@ -11,6 +11,9 @@ Core::Core() : running(true){ // funcion core pertenece a la clase core y runnin
     // se crea al jugador y al nivel, se les pasa el renderer para que carguen sus cosas
     player = std::make_unique<Player>(renderer.get());
     level = std::make_unique<Level>(renderer.get());
+
+    menu = std::make_unique<Menu>(renderer.get());
+    currentState = MENU;
 }
 
 // destructor
@@ -32,15 +35,40 @@ void Core::run() {
 }
 
 void Core::update(float dt) {
-    player->handleInput(inputManager.get());
-    physics->update(player->getBody(), dt, level->getPlatforms());
-    player->update(dt);
+    switch (currentState) {
+        case MENU:
+            // el menú solo escucha si presionamos Enter
+            if (menu->handleInput(inputManager.get())) {
+                currentState = PLAYING; 
+                std::cout << "Iniciando Juego..." << std::endl;
+            }
+            break;
+
+        case PLAYING:
+            //se sigue la lógica normal del juego solo corre si estamos en PLAYING
+            player->handleInput(inputManager.get());
+            physics->update(player->getBody(), dt, level->getPlatforms());
+            player->update(dt);
+            break;
+    }
 }
 
 void Core::render() {
     renderer->clear();
-    level->render(renderer.get());
-    player->render(renderer.get());
+
+    switch (currentState) {
+        case MENU:
+            // level->render(renderer.get()); // si queremos que se vea el fondo de algun nivel
+            menu->render(renderer.get());
+            break;
+
+        case PLAYING:
+            level->render(renderer.get());
+            player->render(renderer.get());
+            // Debug...
+            break;
+    }
+
     renderer->present();
 }
 /*
