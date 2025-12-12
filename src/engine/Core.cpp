@@ -63,7 +63,7 @@ void Core::render() {
             break;
 
         case PLAYING:
-            level->render(renderer.get());
+            level->render(renderer.get(), 1);
             player->render(renderer.get());
             // Debug...
             break;

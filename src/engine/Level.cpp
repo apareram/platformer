@@ -1,26 +1,41 @@
 #include "Level.h"
 #include "ResourceManager.h" // gestor de assets
 
-Level::Level(Renderer* renderer) {
+Level::Level(Renderer* renderer, int levelId) {
     // se obtienen los recursos necesarios
     SDL_Renderer* rawRen = renderer->getRenderer();
     auto& res = ResourceManager::getInstance();
 
-    // se cargan las texturas
-    background = res.loadTexture("assets/fondo.png", rawRen);
-    platBigTex = res.loadTexture("assets/plataformaGrande.png", rawRen);
-    platSmallTex = res.loadTexture("assets/platafomaPequena.png", rawRen);
+    switch (levelId)
+    {
+    case 1:
+        // se cargan las texturas
+        background = res.loadTexture("assets/fondo.png", rawRen);
+        platBigTex = res.loadTexture("assets/plataformaGrande.png", rawRen);
+        platSmallTex = res.loadTexture("assets/platafomaPequena.png", rawRen);
+        // plataforma Grande (X: 55, Y: 65)
+        Platform p1 = {55, 65, 250, 100};
+        platforms.push_back(p1);
 
-    // se define la FÍSICA del nivel (Las "Cajas Rojas")
-    // aquí definimos dónde chocará el jugador.
+        // plataforma Pequeña (X: 400, Y: 310)
+        Platform p2 = {400, 310, 100, 80};
+        platforms.push_back(p2);
+        break;
     
-    // plataforma Grande (X: 55, Y: 65)
-    Platform p1 = {55, 65, 250, 100};
-    platforms.push_back(p1);
+    case 2:
+        // se cargan las texturas
+        background = res.loadTexture("assets/fondo.png", rawRen);
+        platBigTex = res.loadTexture("assets/plataformaGrande.png", rawRen);
+        platSmallTex = res.loadTexture("assets/platafomaPequena.png", rawRen);
+        // plataforma Grande (X: 55, Y: 65)
+        Platform p1 = {55, 65, 250, 100};
+        platforms.push_back(p1);
 
-    // plataforma Pequeña (X: 400, Y: 310)
-    Platform p2 = {400, 310, 100, 80};
-    platforms.push_back(p2);
+        // plataforma Pequeña (X: 400, Y: 310)
+        Platform p2 = {400, 310, 100, 80};
+        platforms.push_back(p2);
+        break;
+    }
 }
 
 void Level::render(Renderer* renderer) {
