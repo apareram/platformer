@@ -5,10 +5,11 @@
 
 class Level {
 public:
-    Level(Renderer* renderer);
-    void render(Renderer* renderer, int levelId);
+    Level(Renderer* renderer, int levelId); 
     
-    // para que la física sepa contra qué chocar
+    // xOffset (la posición de la cámara)
+    void render(Renderer* renderer, float cameraX);
+
     const std::vector<Platform>& getPlatforms() const { return platforms; }
 
 private:

@@ -10,7 +10,7 @@ public:
     
     void handleInput(InputManager* input);
     void update(float dt);
-    void render(Renderer* renderer);
+    void render(Renderer* renderer, float cameraX);
 
     // Ggtters para que la física externa pueda moverlo
     Body& getBody() { return body; }

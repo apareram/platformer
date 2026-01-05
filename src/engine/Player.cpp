@@ -156,8 +156,8 @@ void Player::update(float dt) {
             // salto normal
             nextAnim = &jumpAnim;
             
-            if (body.vy < 0) {// se verifica la velocidad vertical (
-                animSpeed = 0.1f; 
+            if (body.vy < 0) {// se verifica la velocidad vertical 
+                animSpeed = 0.09f; 
                 loopAnim = false; 
             } 
             else { // esta cayendo (vy > 0)
@@ -206,13 +206,13 @@ void Player::update(float dt) {
     }
 }
 
-void Player::render(Renderer* renderer) {
+void Player::render(Renderer* renderer, float cameraX) {
     // lógica de dibujo desplazado
     SDL_Texture* tex = (*currentAnim)[currentFrame];
     
     // ajuste visual (100x100 vs 40x80)
     float drawW = 100; float drawH = 100;
-    float drawX = body.x - (drawW - body.width) / 2;
+    float drawX = (body.x - cameraX) - (drawW - body.width) / 2;
     float drawY = body.y - (drawH - body.height);
 
     renderer->drawTexture(tex, drawX, drawY, drawW, drawH, facingLeft);

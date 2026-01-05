@@ -34,5 +34,7 @@ private:
     std::unique_ptr<Menu> menu; 
     GameState currentState;
 
+    SDL_FRect camera; // dinde se guardará {x, y, w, h} de lo que vemos
+
     bool running;
 };

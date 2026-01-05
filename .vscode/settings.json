@@ -64,6 +64,9 @@
         "random": "cpp",
         "type_traits": "cpp",
         "utility": "cpp",
-        "cinttypes": "cpp"
+        "cinttypes": "cpp",
+        "__tree": "cpp",
+        "map": "cpp",
+        "span": "cpp"
     }
 }

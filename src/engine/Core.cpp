@@ -10,10 +10,12 @@ Core::Core() : running(true){ // funcion core pertenece a la clase core y runnin
 
     // se crea al jugador y al nivel, se les pasa el renderer para que carguen sus cosas
     player = std::make_unique<Player>(renderer.get());
-    level = std::make_unique<Level>(renderer.get());
+    level = std::make_unique<Level>(renderer.get(), 1);
 
     menu = std::make_unique<Menu>(renderer.get());
     currentState = MENU;
+
+    camera = {0, 0, 800, 600}; // la cámara mide igual que la ventana (800x600)
 }
 
 // destructor
@@ -49,6 +51,16 @@ void Core::update(float dt) {
             player->handleInput(inputManager.get());
             physics->update(player->getBody(), dt, level->getPlatforms());
             player->update(dt);
+
+            // --- LÓGICA DE CÁMARA ---
+            // Queremos que el jugador esté en la mitad de la pantalla (anchura/2 = 400)
+            // camera.x = jugador.x - mitad_pantalla
+            camera.x = player->getBody().x - 400;
+
+            // Límite izquierdo: Que no muestre el vacío antes del inicio del nivel (x < 0)
+            if (camera.x < 0) camera.x = 0;
+            
+            // (Opcional) Límite derecho: Si sabes cuánto mide tu nivel, ponlo aquí.
             break;
     }
 }
@@ -63,8 +75,8 @@ void Core::render() {
             break;
 
         case PLAYING:
-            level->render(renderer.get(), 1);
-            player->render(renderer.get());
+            level->render(renderer.get(), camera.x);
+            player->render(renderer.get(), camera.x);
             // Debug...
             break;
     }
