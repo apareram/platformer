@@ -56,3 +56,12 @@ bool Physics::checkCollision(const Body& b, const Platform& p) {
         b.y + b.height > p.y    // Pies cuerpo > Cabeza plat
     );
 }
+
+bool Physics::checkPortalCollision(const Body& body, const Portal& portal) {
+    return (
+        body.x < portal.x + portal.w &&
+        body.x + body.width > portal.x &&
+        body.y < portal.y + portal.h &&
+        body.y + body.height > portal.y
+    );
+}

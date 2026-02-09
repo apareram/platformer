@@ -22,19 +22,21 @@ public:
 private:
     void update(float dt);
     void render();
+    void loadLevel(int levelId);
 
     std::unique_ptr<Renderer> renderer;
     std::unique_ptr<InputManager> inputManager;
     std::unique_ptr<Physics> physics;
 
     // objetos propios
-    std::unique_ptr<Player> player; 
+    std::unique_ptr<Player> player;
     std::unique_ptr<Level> level;
 
-    std::unique_ptr<Menu> menu; 
+    std::unique_ptr<Menu> menu;
     GameState currentState;
 
-    SDL_FRect camera; // dinde se guardará {x, y, w, h} de lo que vemos
+    SDL_FRect camera;
 
+    int currentLevel;
     bool running;
 };

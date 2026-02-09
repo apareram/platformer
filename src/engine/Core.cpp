@@ -3,23 +3,40 @@
 #include <iostream>
 
 // constructor
-Core::Core() : running(true){ // funcion core pertenece a la clase core y running empieza true
+Core::Core() : running(true), currentLevel(1) {
     renderer = std::make_unique<Renderer>(800, 600, "Platformer");
     inputManager = std::make_unique<InputManager>();
     physics = std::make_unique<Physics>(1200.0f, 520.0f);
 
-    // se crea al jugador y al nivel, se les pasa el renderer para que carguen sus cosas
     player = std::make_unique<Player>(renderer.get());
-    level = std::make_unique<Level>(renderer.get(), 1);
+    level = std::make_unique<Level>(renderer.get(), currentLevel);
 
     menu = std::make_unique<Menu>(renderer.get());
     currentState = MENU;
 
-    camera = {0, 0, 800, 600}; // la cámara mide igual que la ventana (800x600)
+    camera = {0, 0, 800, 600};
 }
 
 // destructor
 Core::~Core() {}
+
+void Core::loadLevel(int levelId) {
+    currentLevel = levelId;
+    level = std::make_unique<Level>(renderer.get(), currentLevel);
+
+    // resetear jugador al inicio del nivel
+    Body& body = player->getBody();
+    body.x = 100;
+    body.y = 100;
+    body.vx = 0;
+    body.vy = 0;
+    body.grounded = false;
+    body.jumpCount = 0;
+    body.angularVel = 0;
+    body.angle = 0;
+
+    camera.x = 0;
+}
 
 void Core::run() {
     Uint64 last = SDL_GetPerformanceCounter();
@@ -39,28 +56,32 @@ void Core::run() {
 void Core::update(float dt) {
     switch (currentState) {
         case MENU:
-            // el menú solo escucha si presionamos Enter
             if (menu->handleInput(inputManager.get())) {
-                currentState = PLAYING; 
+                currentState = PLAYING;
+                loadLevel(1);
                 std::cout << "Iniciando Juego..." << std::endl;
             }
             break;
 
         case PLAYING:
-            //se sigue la lógica normal del juego solo corre si estamos en PLAYING
             player->handleInput(inputManager.get());
             physics->update(player->getBody(), dt, level->getPlatforms());
             player->update(dt);
 
-            // --- LÓGICA DE CÁMARA ---
-            // Queremos que el jugador esté en la mitad de la pantalla (anchura/2 = 400)
-            // camera.x = jugador.x - mitad_pantalla
+            // camara sigue al jugador
             camera.x = player->getBody().x - 400;
-
-            // Límite izquierdo: Que no muestre el vacío antes del inicio del nivel (x < 0)
             if (camera.x < 0) camera.x = 0;
-            
-            // (Opcional) Límite derecho: Si sabes cuánto mide tu nivel, ponlo aquí.
+
+            // colision con portal -> siguiente nivel
+            if (physics->checkPortalCollision(player->getBody(), level->getPortal())) {
+                if (currentLevel < Level::TOTAL_LEVELS) {
+                    loadLevel(currentLevel + 1);
+                    std::cout << "Nivel " << currentLevel << " iniciado!" << std::endl;
+                } else {
+                    currentState = MENU;
+                    std::cout << "Juego completado!" << std::endl;
+                }
+            }
             break;
     }
 }

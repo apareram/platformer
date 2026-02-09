@@ -16,10 +16,15 @@ struct Platform {
     float x, y, w, h;
 };
 
+struct Portal {
+    float x, y, w, h;
+};
+
 class Physics {
 public:
     Physics(float gravity = 1200.0f, float groundLevel = 600.0f);
     void update(Body& body, float dt, const std::vector<Platform>& platforms);
+    bool checkPortalCollision(const Body& body, const Portal& portal);
 private:
     float gravity;
     float groundLevel;

@@ -9,46 +9,66 @@ Level::Level(Renderer* renderer, int levelId) {
     background = res.loadTexture("assets/fondo.png", rawRen);
     platBigTex = res.loadTexture("assets/plataformaGrande.png", rawRen);
     platSmallTex = res.loadTexture("assets/platafomaPequena.png", rawRen);
+    portalTex = res.loadTexture("assets/portal.png", rawRen);
 
-    switch (levelId)
-    {
+    switch (levelId) {
     case 1:
         platforms.push_back({55, 65, 250, 100});
         platforms.push_back({400, 310, 100, 80});
-        platforms.push_back({600, 200, 100, 80}); 
-        platforms.push_back({850, 350, 250, 100}); 
+        platforms.push_back({600, 200, 100, 80});
+        platforms.push_back({850, 350, 250, 100});
         platforms.push_back({1200, 310, 100, 80});
+        portal = {1250, 230, 50, 80};
         break;
-    
+
     case 2:
         platforms.push_back({55, 65, 250, 100});
+        platforms.push_back({350, 250, 100, 80});
+        platforms.push_back({550, 150, 100, 80});
+        platforms.push_back({800, 300, 250, 100});
+        platforms.push_back({1100, 200, 100, 80});
+        platforms.push_back({1400, 350, 250, 100});
+        portal = {1500, 270, 50, 80};
+        break;
+
+    case 3:
+        platforms.push_back({55, 65, 250, 100});
+        platforms.push_back({300, 350, 100, 80});
+        platforms.push_back({500, 250, 100, 80});
+        platforms.push_back({700, 150, 100, 80});
+        platforms.push_back({950, 300, 250, 100});
+        platforms.push_back({1250, 200, 100, 80});
+        platforms.push_back({1500, 100, 100, 80});
+        platforms.push_back({1750, 350, 250, 100});
+        portal = {1850, 270, 50, 80};
+        break;
+
+    default:
+        portal = {200, 440, 50, 80};
         break;
     }
 }
 
 void Level::render(Renderer* renderer, float cameraX) {
-    // se dibuja el fondo (Siempre primero)
-    // si se divide cameraX / 2, el fondo se mueve más lento dando sensación de profundidad.
+    // se dibuja el fondo con parallax (se mueve mas lento que la camara)
     if (background) {
         renderer->drawTexture(background, -(cameraX * 0.5f), 0, 800, 600, false);
-        // Nota: se necesitara dibujar una segunda copia del fondo al lado para que no se acabe la imagen,
     }
 
-    
-
-    for (const auto& p : platforms){
-        float screenX = p.x - cameraX; // Coordenada de pantalla = Mundo - Cámara
-        // Dibujamos usando screenX
-    }
-    // se dibujan las plataformas (-10 en Y para que quede al tiro)
-    if (platforms.size() > 0 && platBigTex) {  // se dibuja la primera plataforma (grande)
-        renderer->drawTexture(platBigTex, platforms[0].x, platforms[0].y - 25, platforms[0].w, 120, false);
-    } else if (platforms.size() > 1 && platSmallTex){ // se dibuja la segunda plataforma (Pequeña)
-        renderer->drawTexture(platSmallTex, platforms[1].x, platforms[1].y -30, platforms[1].w, 100, false);
+    // se dibujan TODAS las plataformas con offset de camara
+    for (const auto& p : platforms) {
+        float screenX = p.x - cameraX;
+        // plataformas anchas (>=200) usan textura grande, las demas la pequena
+        if (p.w >= 200 && platBigTex) {
+            renderer->drawTexture(platBigTex, screenX, p.y - 25, p.w, 120, false);
+        } else if (platSmallTex) {
+            renderer->drawTexture(platSmallTex, screenX, p.y - 30, p.w, 100, false);
+        }
     }
 
-    // NOTA PARA EL FUTURO:
-    // Si tuvieras 100 plataformas, no harías if(size > 0), if(size > 1)...
-    // Crearías una clase "Tile" o "PlatformObject" que guarde su propia textura.
-    // Pero para este nivel de 2 plataformas, esto es perfecto y eficiente.
+    // se dibuja el portal
+    if (portalTex) {
+        float portalScreenX = portal.x - cameraX;
+        renderer->drawTexture(portalTex, portalScreenX, portal.y, portal.w, portal.h, false);
+    }
 }
